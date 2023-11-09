@@ -1,5 +1,6 @@
-package RACHDI_RAHMANI.TP_WEB;
+package RACHDI_RAHMANI.TP_WEB.Serie;
 
+import RACHDI_RAHMANI.TP_WEB.Event.Evenement;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -12,4 +13,10 @@ public class Serie {
     private Long ID;
     @OneToMany
     private List<Evenement> Evenements;
+    public Serie(Long ID, List<Evenement> evenements) {
+        this.ID = ID;
+        Evenements = evenements;
+    }
+    public Serie() {
+    }
 }
