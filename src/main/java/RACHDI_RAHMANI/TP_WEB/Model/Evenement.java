@@ -7,4 +7,7 @@ import jakarta.persistence.Id;
 public class Evenement {
     @Id
     private Long ID;
+    private String key;
+    private String value;
+    private String tag;
 }

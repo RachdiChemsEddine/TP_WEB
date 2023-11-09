@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TpWebApplication {
-
 	public static void main(String[] args) {
-		SpringApplication.run(TpWebApplication.class, args);
+		SpringApplication.run(TpWebApplication.class, args
+		);
 	}
 
 }
