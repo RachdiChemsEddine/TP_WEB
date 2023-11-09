@@ -1,6 +1,5 @@
-package RACHDI_RAHMANI.TP_WEB.Serie;
+package RACHDI_RAHMANI.TP_WEB.Model;
 
-import RACHDI_RAHMANI.TP_WEB.Event.Evenement;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;

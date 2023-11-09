@@ -1,6 +1,5 @@
-package RACHDI_RAHMANI.TP_WEB.User;
+package RACHDI_RAHMANI.TP_WEB.Model;
 
-import RACHDI_RAHMANI.TP_WEB.Serie.Serie;
 import jakarta.persistence.*;
 import java.util.List;
 

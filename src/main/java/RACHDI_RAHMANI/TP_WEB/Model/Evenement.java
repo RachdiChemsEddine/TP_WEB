@@ -1,4 +1,4 @@
-package RACHDI_RAHMANI.TP_WEB.Event;
+package RACHDI_RAHMANI.TP_WEB.Model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
