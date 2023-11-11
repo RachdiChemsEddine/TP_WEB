@@ -1,10 +1,10 @@
 package RACHDI_RAHMANI.TP_WEB.Service;
 
+import RACHDI_RAHMANI.TP_WEB.Dto.UserDto;
 import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Service
@@ -35,5 +35,10 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
         return userRepository.findByUsername(username);
+    }
+
+    public UserDto getUserByUsername(long l) {
+
+        return null;
     }
 }

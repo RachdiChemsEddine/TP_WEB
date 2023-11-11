@@ -1,3 +1,4 @@
+/*
 package RACHDI_RAHMANI.TP_WEB.Configuration;
 
 import org.springframework.context.annotation.Configuration;
@@ -8,3 +9,4 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 public class SecurityConfig {
 
 }
+*/

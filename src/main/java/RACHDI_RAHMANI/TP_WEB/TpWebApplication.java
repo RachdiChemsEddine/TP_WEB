@@ -9,5 +9,4 @@ public class TpWebApplication {
 		SpringApplication.run(TpWebApplication.class, args
 		);
 	}
-
 }

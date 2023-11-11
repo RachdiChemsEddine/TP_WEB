@@ -1,3 +1,4 @@
+/*
 package RACHDI_RAHMANI.TP_WEB.Configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -19,3 +20,4 @@ public class AppConfig {
         return dataSource;
     }
 }
+*/
