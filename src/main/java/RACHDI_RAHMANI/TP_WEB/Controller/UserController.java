@@ -4,6 +4,7 @@ import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Model.RegistrationRequest;
 import RACHDI_RAHMANI.TP_WEB.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +19,33 @@ public class UserController {
     public UserController(UserService userService, HttpSession httpSession) {
         this.userService = userService;
         this.httpSession = httpSession;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestParam String username, @RequestParam String password) {
+        User user = userService.findUser(username);
+
+        if (user != null && user.getPassword().equals(password)) {
+            // Authentification réussie, créer une session
+            httpSession.setAttribute("username", username);
+            return ResponseEntity.ok("Authentication successful");
+        } else {
+            // Authentification échouée
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+        }
+    }
+
+    // Autres méthodes du contrôleur...
+
+    @GetMapping("/session-info")
+    public ResponseEntity<String> getSessionInfo() {
+        String username = (String) httpSession.getAttribute("username");
+
+        if (username != null) {
+            return ResponseEntity.ok("Username in session: " + username);
+        } else {
+            return ResponseEntity.ok("No username in session");
+        }
     }
 
     @PostMapping("/register")
@@ -36,6 +64,7 @@ public class UserController {
 
         return ResponseEntity.ok("Utilisateur enregistré avec succès");
     }
+
 
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserDetails(@PathVariable String username) {
@@ -60,5 +89,17 @@ public class UserController {
         httpSession.setAttribute("username", username);
 
         return ResponseEntity.ok("Détails utilisateur mis à jour avec succès");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            // Supprimer l'attribut "username" de la session
+            session.removeAttribute("username");
+            return ResponseEntity.ok("Déconnexion réussie pour l'utilisateur : " + username);
+        } else {
+            return ResponseEntity.ok("Aucun utilisateur connecté");
+        }
     }
 }

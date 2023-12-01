@@ -95,4 +95,8 @@ public class User {
     public List<Serie> getSharedSeries() {
         return SharedSeries;
     }
+
+    public void addOwnedSeries(Serie createdSerie) {
+        OwnSeries.add(createdSerie);
+    }
 }

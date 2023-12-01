@@ -1,3 +1,4 @@
+/*
 package RACHDI_RAHMANI.TP_WEB.Authentification;
 
 
@@ -62,3 +63,4 @@ public class AuthentificationFilter implements Filter {
     }
 }
 
+*/
