@@ -1,14 +1,11 @@
 package RACHDI_RAHMANI.TP_WEB.Controller;
 
-import RACHDI_RAHMANI.TP_WEB.Dto.SerieDto;
 import RACHDI_RAHMANI.TP_WEB.Model.Serie;
 import RACHDI_RAHMANI.TP_WEB.Service.SerieService;
-import RACHDI_RAHMANI.TP_WEB.Mapper.SerieMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/serie")
@@ -22,43 +19,46 @@ public class SerieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SerieDto>> getAllSerie() {
-        List<SerieDto> SerieDtos = serieService.getAllSerie()
-                .stream()
-                .map(SerieMapper.INSTANCE::SerieToSerieDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(SerieDtos);
+    public ResponseEntity<List<Serie>> getAllSerie() {
+        List<Serie> series = serieService.getAllSerie();
+        return ResponseEntity.ok(series);
     }
 
-    @GetMapping("/{SerieId}")
-    public ResponseEntity<SerieDto> getSerieById(@PathVariable Long SerieId) {
-        SerieDto SerieDto = SerieMapper.INSTANCE.SerieToSerieDto(serieService.getSerieById(SerieId));
-
-        return ResponseEntity.ok(SerieDto);
+    @GetMapping("/{serieId}")
+    public ResponseEntity<Serie> getSerieById(@PathVariable Long serieId) {
+        if (serieService.getSerieById(serieId) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Serie serie = (Serie) serieService.getSerieById(serieId);
+        return ResponseEntity.ok(serie);
     }
 
     @PostMapping
-    public ResponseEntity<SerieDto> createSerie(@RequestBody SerieDto SerieDto) {
-        Serie newSerie = SerieMapper.INSTANCE.SerieDtoToSerie(SerieDto);
-        Serie createdSerie = serieService.createSerie(newSerie);
-
-        SerieDto createdSerieDto = SerieMapper.INSTANCE.SerieToSerieDto(createdSerie);
-
-        return ResponseEntity.ok(createdSerieDto);
+    public ResponseEntity<Serie> createSerie(@RequestBody Serie serie) {
+        Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
+        return ResponseEntity.ok(createdSerie);
     }
 
     @PutMapping("/{serieId}")
-    public ResponseEntity<SerieDto> updateSerie(@PathVariable Long SerieId, @RequestBody SerieDto updatedSerieDto) {
-        Serie updatedSerie = SerieMapper.INSTANCE.SerieDtoToSerie(updatedSerieDto);
-        SerieDto resultSerieDto = SerieMapper.INSTANCE.SerieToSerieDto(serieService.updateSerie(SerieId, updatedSerie));
-
-        return ResponseEntity.ok(resultSerieDto);
+    public ResponseEntity<Serie> updateSerie(@PathVariable Long serieId, @RequestBody Serie updatedSerie) {
+        Serie resultSerie = serieService.updateSerie(serieId, updatedSerie);
+        return ResponseEntity.ok(resultSerie);
     }
 
-    @DeleteMapping("/{SerieId}")
-    public ResponseEntity<String> deleteSerie(@PathVariable Long SerieId) {
-        serieService.deleteSerie(SerieId);
+    @PutMapping("/{serieId}/add-existing-evenement/{evenementId}")
+    public ResponseEntity<Serie> addExistingEvenementToSerie(@PathVariable Long serieId, @PathVariable Long evenementId) {
+        Serie updatedSerie = serieService.addExistingEvenementToSerie(serieId, evenementId);
+
+        if (updatedSerie != null) {
+            return ResponseEntity.ok(updatedSerie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{serieId}")
+    public ResponseEntity<String> deleteSerie(@PathVariable Long serieId) {
+        serieService.deleteSerie(serieId);
         return ResponseEntity.ok("Serie deleted successfully");
     }
 }

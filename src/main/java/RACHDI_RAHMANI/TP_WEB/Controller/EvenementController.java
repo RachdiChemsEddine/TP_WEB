@@ -1,7 +1,5 @@
 package RACHDI_RAHMANI.TP_WEB.Controller;
 
-import RACHDI_RAHMANI.TP_WEB.Dto.EvenementDto;
-import RACHDI_RAHMANI.TP_WEB.Mapper.EvenementMapper;
 import RACHDI_RAHMANI.TP_WEB.Model.Evenement;
 import RACHDI_RAHMANI.TP_WEB.Service.EvenementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/evenements")
@@ -23,38 +20,27 @@ public class EvenementController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EvenementDto>> getAllEvenements() {
-        List<EvenementDto> evenementDtos = evenementService.getAllEvenements()
-                .stream()
-                .map(EvenementMapper.INSTANCE::evenementToEvenementDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(evenementDtos);
+    public ResponseEntity<List<Evenement>> getAllEvenements() {
+        List<Evenement> evenements = evenementService.getAllEvenements();
+        return ResponseEntity.ok(evenements);
     }
 
     @GetMapping("/{evenementId}")
-    public ResponseEntity<EvenementDto> getEvenementById(@PathVariable Long evenementId) {
-        EvenementDto evenementDto = EvenementMapper.INSTANCE.evenementToEvenementDto(evenementService.getEvenementById(evenementId));
-
-        return ResponseEntity.ok(evenementDto);
+    public ResponseEntity<Evenement> getEvenementById(@PathVariable Long evenementId) {
+        Evenement evenement = evenementService.getEvenementById(evenementId);
+        return ResponseEntity.ok(evenement);
     }
 
     @PostMapping
-    public ResponseEntity<EvenementDto> createEvenement(@RequestBody EvenementDto evenementDto) {
-        Evenement newEvenement = EvenementMapper.INSTANCE.evenementDtoToEvenement(evenementDto);
-        Evenement createdEvenement = evenementService.createEvenement(newEvenement);
-
-        EvenementDto createdEvenementDto = EvenementMapper.INSTANCE.evenementToEvenementDto(createdEvenement);
-
-        return ResponseEntity.ok(createdEvenementDto);
+    public ResponseEntity<Evenement> createEvenement(@RequestBody Evenement evenement) {
+        Evenement createdEvenement = evenementService.createEvenement(evenement.getDate(), evenement.getValeur(), evenement.getTag());
+        return ResponseEntity.ok(createdEvenement);
     }
 
     @PutMapping("/{evenementId}")
-    public ResponseEntity<EvenementDto> updateEvenement(@PathVariable Long evenementId, @RequestBody EvenementDto updatedEvenementDto) {
-        Evenement updatedEvenement = EvenementMapper.INSTANCE.evenementDtoToEvenement(updatedEvenementDto);
-        EvenementDto resultEvenementDto = EvenementMapper.INSTANCE.evenementToEvenementDto(evenementService.updateEvenement(evenementId, updatedEvenement));
-
-        return ResponseEntity.ok(resultEvenementDto);
+    public ResponseEntity<Evenement> updateEvenement(@PathVariable Long evenementId, @RequestBody Evenement updatedEvenement) {
+        Evenement resultEvenement = evenementService.updateEvenement(evenementId, updatedEvenement);
+        return ResponseEntity.ok(resultEvenement);
     }
 
     @DeleteMapping("/{evenementId}")

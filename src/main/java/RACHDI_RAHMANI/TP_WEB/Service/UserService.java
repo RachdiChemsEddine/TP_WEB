@@ -21,24 +21,25 @@ public class UserService {
         return passwordEncoder.encode(password);
     }*/
 
-    public User createUser(String username, String password){
+    public User createUser(String username, String password, String nom, String prenom){
         if (userRepository.findByUsername(username) != null){
             throw new RuntimeException("User already exists");
         }
         /*String hashedPassword = hashPassword(password);*/
-        User user = new User(username, password);
+        User user = new User(username, password, nom, prenom);
         return userRepository.save(user);
     }
 
     public User findUser(String username){
         if (userRepository.findByUsername(username) == null){
-            throw new RuntimeException("User not found");
+            return null;
         }
         return userRepository.findByUsername(username);
     }
 
-    public UserDto getUserByUsername(long l) {
-
-        return null;
+    public void updateUser(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
     }
 }

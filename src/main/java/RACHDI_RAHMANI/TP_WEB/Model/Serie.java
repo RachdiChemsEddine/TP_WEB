@@ -35,10 +35,18 @@ public class Serie {
     }
 
     public void setTitle(String title) {
-        title = title;
+        this.title = title;
     }
 
     public void setDescription(String description) {
-        description = description;
+        this.description = description;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public Long getId() {
+        return ID;
     }
 }

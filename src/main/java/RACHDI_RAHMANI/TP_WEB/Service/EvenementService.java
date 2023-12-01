@@ -5,6 +5,7 @@ import RACHDI_RAHMANI.TP_WEB.Repository.EvenementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,8 +27,11 @@ public class EvenementService {
                 .orElseThrow(() -> new RuntimeException("Evenement not found"));
     }
 
-    public Evenement createEvenement(Evenement evenement) {
-        // Ajoutez ici des vérifications ou des validations si nécessaire
+    public Evenement createEvenement(LocalDate date, Double valeur, String tag) {
+        Evenement evenement = new Evenement();
+        evenement.setDate(date);
+        evenement.setValeur(valeur);
+        evenement.setTag(tag);
         return evenementRepository.save(evenement);
     }
 
@@ -35,7 +39,7 @@ public class EvenementService {
         Evenement existingEvenement = getEvenementById(evenementId);
         // Ajoutez ici la logique de mise à jour en fonction des besoins de votre application
         existingEvenement.setDate(updatedEvenement.getDate());
-        existingEvenement.setValue(updatedEvenement.getValue());
+        existingEvenement.setValeur(updatedEvenement.getValeur());
         // Mise à jour d'autres champs selon vos besoins
 
         return evenementRepository.save(existingEvenement);

@@ -1,46 +1,53 @@
 package RACHDI_RAHMANI.TP_WEB.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
 @Table(name = "evenements")
 public class Evenement {
     @Id
-    @Getter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
-    private Date date;
-    private Double value;
-
-
+    private LocalDate date;
+    private Double valeur;
     @Getter
+    @Column(nullable = true)
     private String tag;
+
+    public Long getID() {
+        return ID;
+    }
 
     public void setID(Long ID) {
         this.ID = ID;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public void setValeur(Double value) {
+        this.valeur = value;
     }
 
     public void setTag(String tag) {
         this.tag = tag;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Double getValue() {
-        return value;
+    public Double getValeur() {
+        return valeur;
+    }
+
+    public String getTag() {
+        return tag;
     }
 }

@@ -1,5 +1,6 @@
 package RACHDI_RAHMANI.TP_WEB.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +16,8 @@ public class User {
     private String username;
     private String nom;
     private String prenom;
+    @JsonIgnore
+    @Column(nullable = false)
     private String password;
     @OneToMany
     private List<Serie> OwnSeries;
@@ -24,6 +27,13 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String username, String password, String nom, String prenom) {
+        this.username = username;
+        this.password = password;
+        this.nom = nom;
+        this.prenom = prenom;
     }
 
     public User() {
