@@ -49,7 +49,7 @@ public class EvenementController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         User user = userService.findUser((String) httpSession.getAttribute("username"));
-        if (!serieService.userHasSerie(title, user.getUsername())) {
+        if (!serieService.userHasSerie(user.getUsername(), title)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Serie serie = user.getOwnSeries().stream().filter(s -> s.getTitle().equals(title)).findFirst().orElse(null);
@@ -68,6 +68,14 @@ public class EvenementController {
 
     @DeleteMapping("/{evenementId}")
     public ResponseEntity<String> deleteEvenement(@PathVariable Long evenementId) {
+        // Vérification de l'authentification
+        if (httpSession.getAttribute("username") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        // Vérification de l'existence de l'événement
+        if (evenementService.getEvenementById(evenementId) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         evenementService.deleteEvenement(evenementId);
         return ResponseEntity.ok("Evenement deleted successfully");
     }

@@ -53,4 +53,8 @@ public class Serie {
     public void addEvenement(Evenement createdEvenement) {
         Evenements.add(createdEvenement);
     }
+
+    public void removeEvenement(Evenement evenementToDelete) {
+        Evenements.remove(evenementToDelete);
+    }
 }

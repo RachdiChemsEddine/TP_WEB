@@ -2,6 +2,7 @@ package RACHDI_RAHMANI.TP_WEB.Controller;
 
 import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Model.RegistrationRequest;
+import RACHDI_RAHMANI.TP_WEB.Repository.UserRepository;
 import RACHDI_RAHMANI.TP_WEB.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,13 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
     private final HttpSession httpSession;
 
     @Autowired
-    public UserController(UserService userService, HttpSession httpSession) {
+    public UserController(UserService userService, UserRepository userRepository, HttpSession httpSession) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.httpSession = httpSession;
     }
 
@@ -49,20 +52,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<User> registerUser(@RequestBody RegistrationRequest registrationRequest) {
         // Récupérez les détails de la demande d'inscription (par exemple, nom d'utilisateur et mot de passe)
         String username = registrationRequest.getUsername();
         String password = registrationRequest.getPassword();
         String nom = registrationRequest.getNom();
         String prenom = registrationRequest.getPrenom();
-
+        if (userRepository.findByUsername(username) != null){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
         // Créez un nouvel utilisateur
         userService.createUser(username, password, nom, prenom);
 
         // Exemple d'utilisation de la session
         httpSession.setAttribute("username", username);
 
-        return ResponseEntity.ok("Utilisateur enregistré avec succès");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 

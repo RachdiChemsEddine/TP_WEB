@@ -49,15 +49,15 @@ public class SerieController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         // Vérification de l'existence de la série
-        if (!serieService.userHasSerie(serie.getTitle(), (String) httpSession.getAttribute("username"))) {
+        if (serieService.userHasSerie((String) httpSession.getAttribute("username"), serie.getTitle())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
+        Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
         User user = userService.findUser((String) httpSession.getAttribute("username"));
         // Ajouter la série à la liste ownSeries de l'utilisateur
-        user.addOwnedSeries(serie);
+        user.addOwnedSeries(createdSerie);
         // Mettre à jour l'utilisateur dans la base de données
         userService.updateUser(user.getUsername(), user.getPassword());
-        Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
         return ResponseEntity.ok(createdSerie);
     }
 
