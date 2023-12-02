@@ -61,9 +61,15 @@ public class SerieController {
         return ResponseEntity.ok(createdSerie);
     }
 
-    @PutMapping("/{serieId}")
-    public ResponseEntity<Serie> updateSerie(@PathVariable Long serieId, @RequestBody Serie updatedSerie) {
-        Serie resultSerie = serieService.updateSerie(serieId, updatedSerie);
+    @PutMapping("/{serieTitle}")
+    public ResponseEntity<Serie> updateSerie(@PathVariable String serieTitle, @RequestBody Serie updatedSerie) {
+        if (httpSession.getAttribute("username") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (serieService.getSerieByTitle(serieTitle) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Serie resultSerie = serieService.updateSerie(serieTitle, updatedSerie);
         return ResponseEntity.ok(resultSerie);
     }
 

@@ -40,13 +40,16 @@ public class SerieService {
         return serieRepository.save(serie);
     }
 
-    public Serie updateSerie(Long id, Serie updatedSerie) {
+    public Serie updateSerie(String title, Serie updatedSerie) {
         // Ajoutez la logique métier nécessaire
-        Serie existingSerie = (Serie) getSerieById(id);
+        Serie existingSerie = (Serie) getSerieByTitle(title);
         // Mettez à jour les propriétés de la série temporelle existante avec les nouvelles valeurs
-        existingSerie.setTitle(updatedSerie.getTitle());
-        existingSerie.setDescription(updatedSerie.getDescription());
-        existingSerie.setEvenements(updatedSerie.getEvenements());
+        if (updatedSerie.getTitle() != null){
+            existingSerie.setTitle(updatedSerie.getTitle());
+        }
+        if (updatedSerie.getDescription() != null){
+            existingSerie.setDescription(updatedSerie.getDescription());
+        }
         return serieRepository.save(existingSerie);
     }
 
