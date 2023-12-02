@@ -1,7 +1,11 @@
 package RACHDI_RAHMANI.TP_WEB.Controller;
 
 import RACHDI_RAHMANI.TP_WEB.Model.Evenement;
+import RACHDI_RAHMANI.TP_WEB.Model.Serie;
 import RACHDI_RAHMANI.TP_WEB.Service.EvenementService;
+import RACHDI_RAHMANI.TP_WEB.Service.SerieService;
+import RACHDI_RAHMANI.TP_WEB.Model.User;
+import RACHDI_RAHMANI.TP_WEB.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +19,15 @@ import java.util.List;
 public class EvenementController {
 
     private final EvenementService evenementService;
+    private final SerieService serieService;
+    private final UserService userService;
     private final HttpSession httpSession;
 
     @Autowired
-    public EvenementController(EvenementService evenementService, HttpSession httpSession) {
+    public EvenementController(EvenementService evenementService, SerieService serieService, UserService userService, HttpSession httpSession) {
         this.evenementService = evenementService;
+        this.serieService = serieService;
+        this.userService = userService;
         this.httpSession = httpSession;
     }
 
@@ -36,11 +44,18 @@ public class EvenementController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Evenement> createEvenement(@RequestBody Evenement evenement) {
+    public ResponseEntity<Evenement> createEvenement(@RequestBody Evenement evenement, @RequestParam String title) {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        User user = userService.findUser((String) httpSession.getAttribute("username"));
+        if (!serieService.userHasSerie(title, user.getUsername())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Serie serie = user.getOwnSeries().stream().filter(s -> s.getTitle().equals(title)).findFirst().orElse(null);
         Evenement createdEvenement = evenementService.createEvenement(evenement.getDate(), evenement.getValeur(), evenement.getTag());
+        serie.addEvenement(createdEvenement);
+        serieService.updateSerie(serie.getId(), serie);
         return ResponseEntity.ok(createdEvenement);
     }
 

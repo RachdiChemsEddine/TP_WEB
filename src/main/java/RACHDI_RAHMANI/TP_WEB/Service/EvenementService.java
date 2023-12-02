@@ -1,7 +1,10 @@
 package RACHDI_RAHMANI.TP_WEB.Service;
 
 import RACHDI_RAHMANI.TP_WEB.Model.Evenement;
+import RACHDI_RAHMANI.TP_WEB.Model.Serie;
+import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Repository.EvenementRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +15,14 @@ import java.util.List;
 public class EvenementService {
 
     private final EvenementRepository evenementRepository;
+    private final UserService userService;
+    private final SerieService serieService;
 
     @Autowired
-    public EvenementService(EvenementRepository evenementRepository) {
+    public EvenementService(EvenementRepository evenementRepository, UserService userService, SerieService serieService, HttpSession httpSession) {
         this.evenementRepository = evenementRepository;
+        this.userService = userService;
+        this.serieService = serieService;
     }
 
     public List<Evenement> getAllEvenements() {

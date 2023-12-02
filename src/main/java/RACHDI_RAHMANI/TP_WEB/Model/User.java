@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,6 @@ public class User {
     }
 
     public User() {
-
     }
 
     public void setId(Long id) {
@@ -98,5 +98,9 @@ public class User {
 
     public void addOwnedSeries(Serie createdSerie) {
         OwnSeries.add(createdSerie);
+    }
+
+    public void removeOwnSeries(Serie serieByTitle) {
+        OwnSeries.remove(serieByTitle);
     }
 }

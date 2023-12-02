@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -20,9 +21,9 @@ public class SerieController {
     private final HttpSession httpSession;
 
     @Autowired
-    public SerieController(SerieService serieService, UserService userService, HttpSession httpSession) {
+    public SerieController(SerieService serieService, UserService userService, UserService userService1, HttpSession httpSession) {
         this.serieService = serieService;
-        this.userService = userService;
+        this.userService = userService1;
         this.httpSession = httpSession;
     }
 
@@ -47,16 +48,16 @@ public class SerieController {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
-
-        // Récupérer l'utilisateur actuellement authentifié
+        // Vérification de l'existence de la série
+        if (!serieService.userHasSerie(serie.getTitle(), (String) httpSession.getAttribute("username"))) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
         User user = userService.findUser((String) httpSession.getAttribute("username"));
-
         // Ajouter la série à la liste ownSeries de l'utilisateur
-        user.addOwnedSeries(createdSerie);
-
+        user.addOwnedSeries(serie);
         // Mettre à jour l'utilisateur dans la base de données
         userService.updateUser(user.getUsername(), user.getPassword());
+        Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
         return ResponseEntity.ok(createdSerie);
     }
 
@@ -66,20 +67,18 @@ public class SerieController {
         return ResponseEntity.ok(resultSerie);
     }
 
-    @PutMapping("/{serieId}/add-existing-evenement/{evenementId}")
-    public ResponseEntity<Serie> addExistingEvenementToSerie(@PathVariable Long serieId, @PathVariable Long evenementId) {
-        Serie updatedSerie = serieService.addExistingEvenementToSerie(serieId, evenementId);
-
-        if (updatedSerie != null) {
-            return ResponseEntity.ok(updatedSerie);
-        } else {
+    @DeleteMapping("/{serieId}")
+    public ResponseEntity<String> deleteSerie(@PathVariable String title) {
+        if (httpSession.getAttribute("username") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (serieService.getSerieByTitle(title) == null) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @DeleteMapping("/{serieId}")
-    public ResponseEntity<String> deleteSerie(@PathVariable Long serieId) {
-        serieService.deleteSerie(serieId);
+        if (!serieService.userHasSerie(title, (String) httpSession.getAttribute("username"))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        serieService.deleteSerieByTitle(title, (String) httpSession.getAttribute("username"));
         return ResponseEntity.ok("Serie deleted successfully");
     }
 }

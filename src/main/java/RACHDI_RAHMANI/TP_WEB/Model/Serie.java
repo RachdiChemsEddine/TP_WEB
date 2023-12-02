@@ -49,4 +49,8 @@ public class Serie {
     public Long getId() {
         return ID;
     }
+
+    public void addEvenement(Evenement createdEvenement) {
+        Evenements.add(createdEvenement);
+    }
 }
