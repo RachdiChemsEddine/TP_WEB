@@ -72,4 +72,19 @@ public class SerieService {
     public Serie getSerieByTitle(String serieTitle) {
         return serieRepository.findByTitle(serieTitle);
     }
+
+    public Serie shareSerieWithUser(String serieTitle, String username) {
+        Serie serie = getSerieByTitle(serieTitle);
+        User userToShareWith = userService.findUser(username);
+
+        // Vérifiez si la série et l'utilisateur existent
+        if (serie == null || userToShareWith == null) {
+            throw new IllegalArgumentException("Serie or user not found");
+        }
+
+        // Ajoutez l'utilisateur à la liste des utilisateurs partagés
+        userToShareWith.addSharedSeries(serie);
+        userService.updateUser(userToShareWith.getUsername(), userToShareWith.getPassword());
+        return serie;
+    }
 }

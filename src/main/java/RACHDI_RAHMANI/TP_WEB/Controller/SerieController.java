@@ -33,12 +33,12 @@ public class SerieController {
         return ResponseEntity.ok(series);
     }
 
-    @GetMapping("/{serieId}")
-    public ResponseEntity<Serie> getSerieById(@PathVariable Long serieId) {
-        if (serieService.getSerieById(serieId) == null) {
+    @GetMapping("/{serieTitle}")
+    public ResponseEntity<Serie> getSerieByTitle(@PathVariable String serieTitle) {
+        if (serieService.getSerieByTitle(serieTitle) == null) {
             return ResponseEntity.notFound().build();
         }
-        Serie serie = (Serie) serieService.getSerieById(serieId);
+        Serie serie = (Serie) serieService.getSerieByTitle(serieTitle);
         return ResponseEntity.ok(serie);
     }
 
@@ -73,7 +73,7 @@ public class SerieController {
         return ResponseEntity.ok(resultSerie);
     }
 
-    @DeleteMapping("/{serieId}")
+    @DeleteMapping("/{serieTitle}")
     public ResponseEntity<String> deleteSerie(@PathVariable String title) {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -86,5 +86,27 @@ public class SerieController {
         }
         serieService.deleteSerieByTitle(title, (String) httpSession.getAttribute("username"));
         return ResponseEntity.ok("Serie deleted successfully");
+    }
+
+    @PostMapping("/{serieTitle}/share-with-user")
+    public ResponseEntity<String> shareSerieWithUser(
+            @PathVariable String serieTitle,
+            @RequestParam String username) {
+        if (httpSession.getAttribute("username") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        // verifier que l'utilisateur possède la série
+        if (!serieService.userHasSerie((String) httpSession.getAttribute("username"), serieTitle)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Serie sharedSerie = serieService.shareSerieWithUser(serieTitle, username);
+
+        // Vérifiez si la série a été partagée avec succès
+        if (sharedSerie == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok("Serie shared successfully with user: " + username);
     }
 }

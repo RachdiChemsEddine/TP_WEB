@@ -103,4 +103,8 @@ public class User {
     public void removeOwnSeries(Serie serieByTitle) {
         OwnSeries.remove(serieByTitle);
     }
+
+    public void addSharedSeries(Serie serie) {
+        SharedSeries.add(serie);
+    }
 }
