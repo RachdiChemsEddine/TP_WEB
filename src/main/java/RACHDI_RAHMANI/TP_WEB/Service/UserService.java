@@ -7,6 +7,8 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class UserService {
@@ -38,5 +40,9 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         user.setPassword(password);
         userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

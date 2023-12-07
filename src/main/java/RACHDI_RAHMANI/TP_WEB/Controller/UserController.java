@@ -7,8 +7,11 @@ import RACHDI_RAHMANI.TP_WEB.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/user")
@@ -22,6 +25,13 @@ public class UserController {
         this.userService = userService;
         this.userRepository = userRepository;
         this.httpSession = httpSession;
+    }
+
+    @GetMapping("/list")
+    public String getUserList(Model model) {
+        List<User> users = userService.getAllUsers();
+        model.addAttribute("users", users);
+        return "user-list";
     }
 
     @PostMapping("/login")
@@ -68,6 +78,10 @@ public class UserController {
         httpSession.setAttribute("username", username);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @GetMapping("/register")
+    public String showRegisterPage(){
+        return "register";
     }
 
 

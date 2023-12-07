@@ -9,8 +9,4 @@ public class TpWebApplication {
 		SpringApplication.run(TpWebApplication.class, args
 		);
 	}
-	/*@Bean
-	public AuthentificationFilter authenticationFilter(UserService userService) {
-		return new AuthentificationFilter(userService);
-	}*/
 }
