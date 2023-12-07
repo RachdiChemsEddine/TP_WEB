@@ -53,7 +53,7 @@ public class EvenementController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Serie serie = user.getOwnSeries().stream().filter(s -> s.getTitle().equals(title)).findFirst().orElse(null);
-        Evenement createdEvenement = evenementService.createEvenement(evenement.getDate(), evenement.getValeur(), evenement.getTag());
+        Evenement createdEvenement = evenementService.createEvenement(evenement.getDate(), evenement.getValeur(), evenement.getTags());
         serie.addEvenement(createdEvenement);
         serieService.updateSerie(serie.getTitle(), serie);
         return ResponseEntity.ok(createdEvenement);

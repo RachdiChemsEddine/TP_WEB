@@ -7,7 +7,7 @@ import java.util.Date;
 
 public interface EvenementRepository extends JpaRepository<Evenement, Long> {
     Evenement findByDate(Date date);
-    Evenement findByTag(String tag);
+    Evenement findByTags(String tag);
 }
 
 

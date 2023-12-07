@@ -34,11 +34,11 @@ public class EvenementService {
                 .orElseThrow(() -> new RuntimeException("Evenement not found"));
     }
 
-    public Evenement createEvenement(LocalDate date, Double valeur, String tag) {
+    public Evenement createEvenement(LocalDate date, Double valeur, List<String> tag) {
         Evenement evenement = new Evenement();
         evenement.setDate(date);
         evenement.setValeur(valeur);
-        evenement.setTag(tag);
+        evenement.setAllTags(tag);
         return evenementRepository.save(evenement);
     }
 

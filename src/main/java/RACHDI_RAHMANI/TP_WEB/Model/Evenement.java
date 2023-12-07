@@ -1,11 +1,10 @@
 package RACHDI_RAHMANI.TP_WEB.Model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "evenements")
@@ -16,8 +15,8 @@ public class Evenement {
     private LocalDate date;
     private Double valeur;
     @Getter
-    @Column(nullable = true)
-    private String tag;
+    @ElementCollection
+    private List<String> tags;
 
     public Long getID() {
         return ID;
@@ -31,8 +30,8 @@ public class Evenement {
         this.valeur = value;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTags(String tag) {
+        this.tags.add(tag);
     }
 
     public LocalDate getDate() {
@@ -47,7 +46,11 @@ public class Evenement {
         return valeur;
     }
 
-    public String getTag() {
-        return tag;
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setAllTags(List<String> tag) {
+        this.tags = tag;
     }
 }
