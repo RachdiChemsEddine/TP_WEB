@@ -57,10 +57,7 @@ public class SerieService {
         serieRepository.deleteById(id);
     }
 
-    public void deleteSerieByTitle(String title, String username) {
-        User user = userService.findUser("username");
-        // Supprimer la série de la liste ownSeries de l'utilisateur
-        user.removeOwnSeries(getSerieByTitle(title));
+    public void deleteSerieByTitle(String title) {
         serieRepository.deleteByTitle(title);
     }
 

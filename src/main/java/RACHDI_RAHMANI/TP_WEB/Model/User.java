@@ -20,9 +20,9 @@ public class User {
     @JsonIgnore
     @Column(nullable = false)
     private String password;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Serie> OwnSeries;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Serie> SharedSeries;
 
     public User(String username, String password) {

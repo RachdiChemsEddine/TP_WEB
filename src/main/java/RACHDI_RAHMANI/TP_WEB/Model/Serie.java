@@ -14,6 +14,7 @@ public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
+    @Column(unique = true)
     private String title;
     private String description;
     @OneToMany

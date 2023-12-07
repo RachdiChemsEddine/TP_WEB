@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -72,20 +73,21 @@ public class SerieController {
         Serie resultSerie = serieService.updateSerie(serieTitle, updatedSerie);
         return ResponseEntity.ok(resultSerie);
     }
-
+    @Transactional
     @DeleteMapping("/{serieTitle}")
-    public ResponseEntity<String> deleteSerie(@PathVariable String title) {
-        if (httpSession.getAttribute("username") == null) {
+    public ResponseEntity<String> deleteSerie(@PathVariable String serieTitle) {
+        User user = userService.findUser((String) httpSession.getAttribute("username"));
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (serieService.getSerieByTitle(title) == null) {
+        if (serieService.getSerieByTitle(serieTitle) == null) {
             return ResponseEntity.notFound().build();
         }
-        if (!serieService.userHasSerie(title, (String) httpSession.getAttribute("username"))) {
+        if (!serieService.userHasSerie((String) httpSession.getAttribute("username"), serieTitle)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        serieService.deleteSerieByTitle(title, (String) httpSession.getAttribute("username"));
-        return ResponseEntity.ok("Serie deleted successfully");
+        serieService.deleteSerieByTitle(serieTitle);
+        return ResponseEntity.ok("Serie "+ serieTitle +" deleted successfully");
     }
 
     @PostMapping("/{serieTitle}/share-with-user")
