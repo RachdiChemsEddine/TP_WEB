@@ -1,9 +1,7 @@
 package RACHDI_RAHMANI.TP_WEB.Service;
 
-import RACHDI_RAHMANI.TP_WEB.Dto.UserDto;
 import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Repository.UserRepository;
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +17,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    /*private String hashPassword(String password){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
-    }*/
-
     public User createUser(String username, String password, String nom, String prenom){
         User user = new User(username, password, nom, prenom);
         return userRepository.save(user);
@@ -36,9 +29,26 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void updateUser(String username, String password) {
+    public void updateUser(String username, User updatedUser){
         User user = userRepository.findByUsername(username);
-        user.setPassword(password);
+        if (updatedUser.getUsername() != null){
+            user.setUsername(updatedUser.getUsername());
+        }
+        if (updatedUser.getNom() != null){
+            user.setNom(updatedUser.getNom());
+        }
+        if (updatedUser.getPrenom() != null){
+            user.setPrenom(updatedUser.getPrenom());
+        }
+        if (updatedUser.getPassword() != null){
+            user.setPassword(updatedUser.getPassword());
+        };
+        if (updatedUser.getOwnSeries() != null){
+            user.setOwnSeries(updatedUser.getOwnSeries());
+        }
+        if (updatedUser.getSharedSeries() != null){
+            user.setSharedSeries(updatedUser.getSharedSeries());
+        }
         userRepository.save(user);
     }
 

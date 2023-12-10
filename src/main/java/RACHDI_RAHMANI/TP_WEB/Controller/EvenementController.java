@@ -1,6 +1,7 @@
 package RACHDI_RAHMANI.TP_WEB.Controller;
 
 import RACHDI_RAHMANI.TP_WEB.Model.Evenement;
+import RACHDI_RAHMANI.TP_WEB.Model.EventRequest;
 import RACHDI_RAHMANI.TP_WEB.Model.Serie;
 import RACHDI_RAHMANI.TP_WEB.Service.EvenementService;
 import RACHDI_RAHMANI.TP_WEB.Service.SerieService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/evenements")
@@ -38,22 +40,35 @@ public class EvenementController {
     }
 
     @GetMapping("/{evenementId}")
-    public ResponseEntity<Evenement> getEvenementById(@PathVariable Long evenementId) {
+    public ResponseEntity<Evenement> getEvenementById(@PathVariable UUID evenementId) {
         Evenement evenement = evenementService.getEvenementById(evenementId);
         return ResponseEntity.ok(evenement);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Evenement> createEvenement(@RequestBody Evenement evenement, @RequestParam String title) {
+    @GetMapping("/{tag}")
+    public ResponseEntity<List<Evenement>> getEvenementByTag(@PathVariable String tag) {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        if (evenementService.getEvenementByTag(tag) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Evenement> evenements = evenementService.getEvenementByTag(tag);
+        return ResponseEntity.ok(evenements);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Evenement> createEvenement(@RequestBody EventRequest evenement, @RequestParam String title) {
         User user = userService.findUser((String) httpSession.getAttribute("username"));
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if (!serieService.userHasSerie(user.getUsername(), title)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Serie serie = user.getOwnSeries().stream().filter(s -> s.getTitle().equals(title)).findFirst().orElse(null);
         Evenement createdEvenement = evenementService.createEvenement(evenement.getDate(), evenement.getValeur(), evenement.getTags());
+        assert serie != null;
         serie.addEvenement(createdEvenement);
         serieService.updateSerie(serie.getTitle(), serie);
         return ResponseEntity.ok(createdEvenement);
@@ -61,13 +76,13 @@ public class EvenementController {
 
 
     @PutMapping("/{evenementId}")
-    public ResponseEntity<Evenement> updateEvenement(@PathVariable Long evenementId, @RequestBody Evenement updatedEvenement) {
+    public ResponseEntity<Evenement> updateEvenement(@PathVariable UUID evenementId, @RequestBody Evenement updatedEvenement) {
         Evenement resultEvenement = evenementService.updateEvenement(evenementId, updatedEvenement);
         return ResponseEntity.ok(resultEvenement);
     }
 
     @DeleteMapping("/{evenementId}")
-    public ResponseEntity<String> deleteEvenement(@PathVariable Long evenementId) {
+    public ResponseEntity<String> deleteEvenement(@PathVariable UUID evenementId) {
         // Vérification de l'authentification
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

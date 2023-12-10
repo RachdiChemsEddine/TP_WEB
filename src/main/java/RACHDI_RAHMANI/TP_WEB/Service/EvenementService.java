@@ -1,8 +1,6 @@
 package RACHDI_RAHMANI.TP_WEB.Service;
 
 import RACHDI_RAHMANI.TP_WEB.Model.Evenement;
-import RACHDI_RAHMANI.TP_WEB.Model.Serie;
-import RACHDI_RAHMANI.TP_WEB.Model.User;
 import RACHDI_RAHMANI.TP_WEB.Repository.EvenementRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EvenementService {
@@ -29,20 +28,16 @@ public class EvenementService {
         return evenementRepository.findAll();
     }
 
-    public Evenement getEvenementById(Long evenementId) {
-        return evenementRepository.findById(evenementId)
-                .orElseThrow(() -> new RuntimeException("Evenement not found"));
+    public Evenement getEvenementById(UUID evenementId) {
+        return (Evenement) evenementRepository.findByUuid(evenementId);
     }
 
     public Evenement createEvenement(LocalDate date, Double valeur, List<String> tag) {
-        Evenement evenement = new Evenement();
-        evenement.setDate(date);
-        evenement.setValeur(valeur);
-        evenement.setAllTags(tag);
+        Evenement evenement = new Evenement(date, valeur, tag);
         return evenementRepository.save(evenement);
     }
 
-    public Evenement updateEvenement(Long evenementId, Evenement updatedEvenement) {
+    public Evenement updateEvenement(UUID evenementId, Evenement updatedEvenement) {
         Evenement existingEvenement = getEvenementById(evenementId);
         // Ajoutez ici la logique de mise à jour en fonction des besoins de votre application
         existingEvenement.setDate(updatedEvenement.getDate());
@@ -52,8 +47,12 @@ public class EvenementService {
         return evenementRepository.save(existingEvenement);
     }
 
-    public void deleteEvenement(Long evenementId) {
+    public void deleteEvenement(UUID evenementId) {
         Evenement evenementToDelete = getEvenementById(evenementId);
         evenementRepository.delete(evenementToDelete);
+    }
+
+    public List<Evenement> getEvenementByTag(String tag) {
+        return evenementRepository.findByTags(tag);
     }
 }

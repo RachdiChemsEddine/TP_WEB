@@ -41,9 +41,8 @@ public class SerieService {
     }
 
     public Serie updateSerie(String title, Serie updatedSerie) {
-        // Ajoutez la logique métier nécessaire
         Serie existingSerie = (Serie) getSerieByTitle(title);
-        // Mettez à jour les propriétés de la série temporelle existante avec les nouvelles valeurs
+
         if (updatedSerie.getTitle() != null){
             existingSerie.setTitle(updatedSerie.getTitle());
         }
@@ -73,15 +72,12 @@ public class SerieService {
     public Serie shareSerieWithUser(String serieTitle, String username) {
         Serie serie = getSerieByTitle(serieTitle);
         User userToShareWith = userService.findUser(username);
-
-        // Vérifiez si la série et l'utilisateur existent
         if (serie == null || userToShareWith == null) {
             throw new IllegalArgumentException("Serie or user not found");
         }
 
-        // Ajoutez l'utilisateur à la liste des utilisateurs partagés
         userToShareWith.addSharedSeries(serie);
-        userService.updateUser(userToShareWith.getUsername(), userToShareWith.getPassword());
+        userService.updateUser(userToShareWith.getUsername(), userToShareWith);
         return serie;
     }
 }

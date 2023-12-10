@@ -97,12 +97,12 @@ public class UserController {
     }
 
     @PutMapping("/{username}")
-    public ResponseEntity<String> updateUserDetails(@PathVariable String username, @RequestParam String password) {
+    public ResponseEntity<String> updateUserDetails(@PathVariable String username, @RequestParam User updatedUser) {
         // Mettre à jour les détails de l'utilisateur
         if (userService.findUser(username) == null){
             return ResponseEntity.badRequest().body("Utilisateur non trouvé");
         }
-        userService.updateUser(username, password);
+        userService.updateUser(username, updatedUser);
 
         // Exemple d'utilisation de la session
         httpSession.setAttribute("username", username);

@@ -45,20 +45,20 @@ public class SerieController {
 
     @PostMapping("/create")
     public ResponseEntity<Serie> createSerie(@RequestBody Serie serie) {
-        // Vérification de l'authentification
-        if (httpSession.getAttribute("username") == null) {
+        User user = userService.findUser((String) httpSession.getAttribute("username"));
+
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        // Vérification de l'existence de la série
-        if (serieService.userHasSerie((String) httpSession.getAttribute("username"), serie.getTitle())) {
+
+        if (serieService.userHasSerie(user.getUsername(), serie.getTitle())) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         Serie createdSerie = serieService.createSerie(serie.getTitle(), serie.getDescription());
-        User user = userService.findUser((String) httpSession.getAttribute("username"));
-        // Ajouter la série à la liste ownSeries de l'utilisateur
+
         user.addOwnedSeries(createdSerie);
-        // Mettre à jour l'utilisateur dans la base de données
-        userService.updateUser(user.getUsername(), user.getPassword());
+
+        userService.updateUser(user.getUsername(), user);
         return ResponseEntity.ok(createdSerie);
     }
 
@@ -97,18 +97,20 @@ public class SerieController {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        // verifier que l'utilisateur possède la série
+
         if (!serieService.userHasSerie((String) httpSession.getAttribute("username"), serieTitle)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         Serie sharedSerie = serieService.shareSerieWithUser(serieTitle, username);
 
-        // Vérifiez si la série a été partagée avec succès
+
         if (sharedSerie == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok("Serie shared successfully with user: " + username);
     }
+
+
 }

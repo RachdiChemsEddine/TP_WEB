@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -32,8 +33,8 @@ public class DataLoader {
 
         // Exemple : Création d'une série temporelle et d'événements associés
         Serie serie = SerieService.createSerie("Serie 1", "Description de la série 1");
-        List<String> tags = List.of("tag1", "tag2", "tag3");
-        List<String> tags1 = List.of("tag1", "tag3");
+        ArrayList<String> tags = new ArrayList<>(List.of("tag1", "tag2", "tag3"));
+        ArrayList<String> tags1 = new ArrayList<>(List.of("tag1", "tag3"));
         evenementService.createEvenement(LocalDate.parse("2023-01-01"), 10.0, tags);
         evenementService.createEvenement(LocalDate.parse("2023-01-02"), 15.0, tags1);
         // ...
