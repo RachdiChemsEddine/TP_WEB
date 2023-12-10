@@ -29,6 +29,9 @@ public class EvenementService {
     }
 
     public Evenement getEvenementById(UUID evenementId) {
+        if (evenementRepository.findByUuid(evenementId) == null) {
+            throw new IllegalStateException("L'événement avec l'ID " + evenementId + " n'existe pas");
+        }
         return (Evenement) evenementRepository.findByUuid(evenementId);
     }
 

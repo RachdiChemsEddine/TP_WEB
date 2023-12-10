@@ -5,17 +5,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 @Entity
 @Data@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
     @Column(unique = true)
     private String username;
     private String nom;
@@ -24,9 +22,9 @@ public class User {
     @Column(nullable = false)
     private String password;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Serie> OwnSeries;
+    private List<Serie> OwnSeries = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Serie> SharedSeries;
+    private List<Serie> SharedSeries = new ArrayList<>();
 
     public User(String username, String password) {
         this.username = username;
@@ -43,8 +41,8 @@ public class User {
     public User() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID id) {
+        this.uuid = id;
     }
 
     public void setUsername(String username) {
@@ -71,8 +69,8 @@ public class User {
         SharedSeries = sharedSeries;
     }
 
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public String getUsername() {

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SerieService {
@@ -25,9 +26,9 @@ public class SerieService {
         return serieRepository.findAll();
     }
 
-    public Object getSerieById(Long id) {
-        if (serieRepository.findById(id).isPresent()) {
-            return serieRepository.findById(id).get();
+    public Object getSerieById(UUID id) {
+        if (serieRepository.findByUuid(id) != null) {
+            return serieRepository.findByUuid(id);
         } else {
             return null;
         }

@@ -1,19 +1,20 @@
 package RACHDI_RAHMANI.TP_WEB.Dto;
 
 import java.util.List;
+import java.util.UUID;
 
 public class SerieDto {
 
-    private Long id;
+    private UUID id;
     private String title;
     private String description;
     private List EvenementDtos;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

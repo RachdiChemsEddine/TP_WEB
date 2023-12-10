@@ -10,7 +10,6 @@ import java.util.UUID;
 public interface EvenementRepository extends JpaRepository<Evenement, Long> {
     Evenement findByDate(Date date);
     List<Evenement> findByTags(String tag);
-
     Object findByUuid(UUID id);
 }
 

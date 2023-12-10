@@ -11,7 +11,6 @@ public class UserMapperTest {
     public void testUserToUserDto() {
         // Créez un objet User pour les tests
         User user = new User();
-        user.setId(1L);
         user.setUsername("john doe");
         // Ajoutez d'autres propriétés au besoin
 

@@ -111,6 +111,4 @@ public class SerieController {
 
         return ResponseEntity.ok("Serie shared successfully with user: " + username);
     }
-
-
 }

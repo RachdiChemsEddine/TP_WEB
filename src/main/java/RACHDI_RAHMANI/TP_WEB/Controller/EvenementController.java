@@ -45,7 +45,7 @@ public class EvenementController {
         return ResponseEntity.ok(evenement);
     }
 
-    @GetMapping("/{tag}")
+    @GetMapping("/tag/{tag}")
     public ResponseEntity<List<Evenement>> getEvenementByTag(@PathVariable String tag) {
         if (httpSession.getAttribute("username") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

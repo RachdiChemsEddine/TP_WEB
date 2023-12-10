@@ -2,18 +2,17 @@ package RACHDI_RAHMANI.TP_WEB.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 @Entity
 @Data
 @Table(name = "series")
 public class Serie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID uuid;
     @Column(unique = true)
     private String title;
     private String description;
@@ -44,12 +43,12 @@ public class Serie {
         this.description = description;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setUuid(UUID ID) {
+        this.uuid = ID;
     }
 
-    public Long getId() {
-        return ID;
+    public UUID getId() {
+        return uuid;
     }
 
     public void addEvenement(Evenement createdEvenement) {

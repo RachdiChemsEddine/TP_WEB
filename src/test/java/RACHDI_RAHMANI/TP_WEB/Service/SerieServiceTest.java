@@ -19,11 +19,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +47,11 @@ public class SerieServiceTest {
 
     @Test
     public void getSerieByIdTest() {
+        UUID id = UUID.randomUUID();
         Serie serie = new Serie();
-        //when(serieRepository.findById(1L)).thenReturn(Optional.ofNullable(serie));
+        when(serieRepository.findByUuid(id)).thenReturn((serie));
 
-        Object result = serieService.getSerieById(1L);
+        Object result = serieService.getSerieById(id);
 
         assertEquals(serie, result);
     }
@@ -115,7 +112,6 @@ public class SerieServiceTest {
 
         User user = mock(User.class);
         Serie serie = mock(Serie.class);
-        when(serie.getTitle()).thenReturn(serieTitle);
         List<Serie> series = new ArrayList<>();
         series.add(serie);
         when(user.getOwnSeries()).thenReturn(series);

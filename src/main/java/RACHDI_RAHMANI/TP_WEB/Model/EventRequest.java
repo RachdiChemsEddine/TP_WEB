@@ -14,6 +14,10 @@ public class EventRequest {
         this.tags = tags;
     }
 
+    public EventRequest() {
+
+    }
+
     public LocalDate getDate() {
         return date;
     }
